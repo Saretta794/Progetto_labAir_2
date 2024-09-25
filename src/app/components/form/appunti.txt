@@ -1,0 +1,378 @@
+
+    //"/^\p{Script=Latin}+(\s((\p{Script=Latin}+|(\p{Script=Latin}\.)))*$/ui" --> NO!
+    //^[\\p{Script=Latin}]+(\\s(([\\p{Script=Latin}]+|([\\p{Script=Latin}]\\.))*))*$" --> OK! 
+
+    //Escape delle stringhe in JavaScript/TypeScript:In TypeScript o JavaScript, quando utilizzi regex come stringa all'interno di Validators.pattern, devi fare attenzione a come gestisci gli escape (\). Le regex sono scritte come stringhe, quindi devi raddoppiare gli escape, e la stringa stessa non dovrebbe includere i delimitatori / della regex. 
+
+    APPROFONDIMENTO DEL CONCETTO:
+
+    Contesto 1: Stringa in JavaScript o Angular
+    Quando scrivi una regex direttamente in JavaScript o TypeScript, come in Angular, e la inserisci tra le barre (/regex/), non devi usare doppi backslash:
+
+    const regex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+
+    Contesto 2: Stringa all'interno di una stringa letterale (con apici)
+    Se invece inserisci la regex all'interno di una stringa letterale (racchiusa da apici singoli o doppi), allora sì, devi usare i doppi backslash perché altrimenti il backslash verrebbe interpretato come un carattere di escape nella stringa, non come parte della regex. Ad esempio:
+
+    const regex = "^(0[1-9]|1[0-2])\\/\\d{2}$";
+
+
+    Riassunto:
+    Regex direttamente tra slash (/): Un singolo backslash è sufficiente.
+    Regex all'interno di una stringa letterale (tra apici o doppi apici): Devi raddoppiare i backslash
+
+    ---
+
+    //Supporto per classi Unicode:Non tutti i motori regex supportano classi Unicode come \p{Script=Latin}. In JavaScript, il supporto per queste classi è disponibile a partire da ECMAScript 2018 (ES2018) e deve essere accompagnato dal flag u per indicare il supporto Unicode.
+
+    // +++ ATTENZIONE!! Ho dovuto sostituire [\\p{Script=Latin}]  -->  con.. [A-Za-zÀ-ÖØ-öø-ÿ]
+
+    //Motivi del Problema:
+    //Supporto Limitato per \p{Script=Latin}:Le classi Unicode come \p{Script=Latin} sono parte delle specifiche di ECMAScript 2018 (ES2018). Tuttavia, non tutti i motori JavaScript le supportano in modo completo, specialmente quando si usano all'interno di framework come Angular.Anche se il motore regex JavaScript moderno (con il supporto del flag u per Unicode) può riconoscere queste classi, il contesto di validazione dei form in Angular potrebbe non supportare o gestire correttamente queste espressioni.
+    //Regex in Ambienti Specifici:In ambienti più complessi come Angular, dove le regex sono utilizzate all'interno di Validators.pattern, ci sono limitazioni su quali caratteristiche delle regex sono supportate. Questo include la mancata gestione del flag u per Unicode e delle classi Unicode avanzate come \p{Script=Latin}.
+    //Alternativa con [A-Za-zÀ-ÖØ-öø-ÿ]:Per risolvere il problema, hai usato un intervallo esplicito di caratteri latini [A-Za-zÀ-ÖØ-öø-ÿ], che:
+    //--A-Za-z: Corrisponde a tutte le lettere minuscole e maiuscole dell'alfabeto latino di base.
+    //--À-ÖØ-öø-ÿ: Corrisponde a una serie di caratteri latini estesi, inclusi quelli con accenti e dieresi, che sono comuni in lingue come il francese, spagnolo, tedesco, ecc.
+    //Vantaggi di [A-Za-zÀ-ÖØ-öø-ÿ]:
+    //--Compatibilità:Questo intervallo è compatibile con tutti i motori regex che seguono le specifiche ECMAScript, quindi funziona in Angular senza problemi.
+    //--Semplicità:Non richiede l'uso di flag speciali o di funzionalità avanzate, quindi riduce il rischio di incompatibilità.
+    //Conclusione: Hai dovuto sostituire [\p{Script=Latin}] con [A-Za-zÀ-ÖØ-öø-ÿ] per garantire che la regex fosse compatibile con il motore regex utilizzato da Angular e da JavaScript/TypeScript in generale. Questo approccio assicura che la validazione funzioni correttamente per nomi latini, senza dover dipendere da funzionalità avanzate non supportate uniformemente.
+
+
+    In JavaScript puro, puoi usare il flag i per rendere la regex case-insensitive, ma questo non è direttamente supportato da Validators.pattern. Tuttavia, se stai scrivendo un validatore personalizzato come mostrato sopra, puoi includere il flag i nella regex:
+    const regex = new RegExp("^(via|viale|largo|piazza)(\\s[A-Za-zÀ-ÖØ-öø-ÿ]+)+$", "i");
+
+    In JavaScript, la classe RegExp viene utilizzata per creare espressioni regolari dinamicamente. Questo può essere utile se hai bisogno di costruire un'espressione regolare in modo programmato, ad esempio combinando parti della regex in base a condizioni.
+
+    Creazione di un Oggetto RegExp
+    Ecco un esempio di come creare una regex case-insensitive usando RegExp:
+
+    const pattern = "^(via|viale|largo|piazza)(\\s[A-Za-zÀ-ÖØ-öø-ÿ]+)+$";
+    const regex = new RegExp(pattern, "i");
+
+    Uso in Angular con Validators.pattern
+    Purtroppo, Validators.pattern accetta solo stringhe come argomento per il pattern regex e non accetta direttamente un oggetto RegExp. Tuttavia, puoi utilizzare RegExp per costruire la regex e poi passare la stringa risultante a Validators.pattern.
+
+    ?
+
+
+    Nel contesto delle espressioni regolari, il simbolo ? ha diversi significati a seconda della sua posizione. Ecco una spiegazione dettagliata del suo utilizzo:
+
+    Uso di ? in Espressioni Regolari:
+
+    Occorrenza Opzionale:
+
+    Quando ? segue un carattere o un gruppo di caratteri, indica che l'elemento precedente è facoltativo, cioè può apparire zero o una volta.
+    Esempio: a? corrisponde a una stringa che può contenere una a o nessuna a. Quindi, sia "" (stringa vuota) sia "a" sono corrispondenti.
+
+    Quantificatore per il Gruppo:
+
+    Quando ? segue un gruppo di caratteri racchiusi tra parentesi, indica che l'intero gruppo è facoltativo.
+    Esempio: (abc)? corrisponde a una stringa che può contenere "abc" o nessun carattere. Quindi, sia "" (stringa vuota) sia "abc" sono corrispondenti.
+
+    Operatori di Modifica di Quantificatori:
+
+    *?: Questo è un operatore che rende il quantificatore * non avido (lazy). Normalmente, * corrisponde al massimo numero possibile di caratteri, ma *? corrisponde al numero minimo necessario.
+    Esempio: Per la stringa "abc" e la regex a.*b, .* corrisponde al massimo possibile, mentre a.*?b corrisponde al minimo possibile.
+    Asserzioni e Scelte:
+
+    ? può anche essere usato per rappresentare asserzioni (es. (?=pattern) per asserzioni positive) e per specificare le scelte di gruppo (es. (a|b)? per scegliere tra a e b, entrambi opzionali).
+
+
+    Puoi utilizzare * al posto di ? in alcune situazioni, ma ci sono differenze importanti tra i due quantificatori che influenzano come la regex corrisponde alle stringhe.
+
+    Differenze tra ? e * in Regex:
+
+    ? - Occorrenza Opzionale:
+
+    Significato: Indica che l'elemento precedente è facoltativo e può apparire zero o una volta.
+    Esempio: a? corrisponde a una stringa che può contenere una a o nessuna a. Quindi "a" e "" sono corrispondenti.
+
+    * - Occorrenza Multipla:
+
+    Significato: Indica che l'elemento precedente può apparire zero o più volte.
+    Esempio: a* corrisponde a una stringa che può contenere zero o più a. Quindi "", "a", "aa", "aaa", ecc., sono corrispondenti.
+
+VALIDATORS PER EMAIL
+
+   Il validatore Validators.email in Angular è utilizzato per assicurarsi che un campo di input contenga un indirizzo email valido. Questo validatore verifica che la stringa dell'email segua il formato standard di un indirizzo email, che tipicamente include:
+
+    -- Una o più lettere o numeri per la parte locale (prima del simbolo @).
+    -- Un simbolo @.
+    -- Una o più lettere o numeri per il dominio (dopo il simbolo @).
+    -- Un punto (.) seguito da un dominio di primo livello (come .com, .org, .it, ecc.).
+
+    Limiti: Il validatore potrebbe non coprire tutti i casi limite degli indirizzi email, specialmente quelli che sono tecnicamente validi ma poco comuni. Tuttavia, per la maggior parte delle applicazioni, la validazione offerta è più che sufficiente.
+
+
+TIPOLOGIE DI NUMERI CIVICI IN ITALIA
+
+In Italia, i numeri civici possono presentare una varietà di formati a seconda della località e delle specifiche storiche o pratiche. Ecco un elenco dei possibili tipi di numeri civici che si possono trovare:
+
+1. Numeri civici semplici
+Esempi: 1, 23, 456, 7890
+Solo numeri senza alcun suffisso o separatore.
+2. Numeri civici con lettere
+Esempi: 12A, 45B, 78C
+Un numero seguito da una lettera maiuscola.
+3. Numeri civici con lettere e suffissi complessi
+Esempi: 23bis, 45ter, 67quater
+Un numero seguito da una o più lettere che formano un suffisso (es. "bis", "ter", "quater").
+4. Numeri civici frazionati
+Esempi: 12/3, 45/6, 78/9
+Un numero seguito da una barra (/) e un secondo numero.
+5. Numeri civici frazionati con lettere
+Esempi: 12/A, 45B/6, 78/C
+Un numero seguito da una barra (/) e una lettera, oppure una lettera seguita da una barra e un numero.
+6. Numeri civici con trattini
+Esempi: 12-3, 45-6A, 78-B
+Un numero seguito da un trattino (-) e un altro numero o una lettera.
+7. Numeri civici con suffissi e spazi
+Esempi: 12 bis, 45 ter, 67 quater
+Un numero seguito da un suffisso come "bis", "ter", "quater", separato da uno spazio.
+8. Numeri civici con suffissi e trattini
+Esempi: 12-bis, 45-ter, 67-quater
+Un numero seguito da un suffisso (come "bis", "ter") preceduto da un trattino (-).
+9. Numeri civici con separatori multipli
+Esempi: 12A/3B, 45/67, 123A-4B
+Formati complessi che combinano barre, lettere, e numeri.
+10. Numeri civici con spazi
+Esempi: 12 A, 45 B/6, 78 C
+Un numero seguito da una lettera con uno spazio in mezzo, o numeri separati da uno spazio prima o dopo una barra o un trattino.
+11. Numeri civici con suffissi plurimi
+Esempi: 12bis/3, 45ter/B, 67quater-4
+Combinazione di suffissi (bis, ter, quater) con ulteriori frazioni o lettere.
+12. Numeri civici con numeri romani
+Esempi: 12B/III, 45-IV, 67A/V
+Un numero seguito da numeri romani come parte del civico.
+13. Numeri civici con caratteri speciali
+Esempi: 12/Bis, 45-Ⅲ, 67A-Bis
+Formati che utilizzano caratteri speciali per rappresentare suffissi o numeri.
+14. Numeri civici doppie lettere
+Esempi: 12AA, 45BB/6, 78CC
+Numeri seguiti da una combinazione di due lettere.
+Questa varietà riflette l'eterogeneità dei sistemi di numerazione civica italiani, che possono variare notevolmente tra le diverse regioni e città del paese.
+
+
+ALTERNATIVA MESSAGGI ERRORE PER CAP, MA APPLICABILE AGLI ALTRI...
+
+Puoi rendere il tuo codice HTML più compatto utilizzando un solo ngIf per gestire la visualizzazione degli errori. Questo approccio evita di ripetere il controllo degli errori e rende il template più leggibile. Ecco un esempio di come farlo:
+
+
+<div *ngIf="getCampoIndirizzo('cap').touched && getCampoIndirizzo('cap').invalid" class="text-danger">
+  <!-- Mostra errore per 'required' -->
+  <span *ngIf="getCampoIndirizzo('cap').errors?.['required']">Il campo è obbligatorio</span>
+
+  <!-- Mostra errore per 'minlength' e 'maxlength' -->
+  <span *ngIf="getCampoIndirizzo('cap').errors?.['minlength'] || getCampoIndirizzo('cap').errors?.['maxlength']">
+    Il campo deve contenere 5 caratteri
+  </span>
+
+  <!-- Mostra errore per 'pattern' solo se non ci sono altri errori -->
+  <span *ngIf="!getCampoIndirizzo('cap').errors?.['required'] && !getCampoIndirizzo('cap').errors?.['minlength'] && !getCampoIndirizzo('cap').errors?.['maxlength'] && getCampoIndirizzo('cap').errors?.['pattern']">
+    Il campo contiene caratteri non validi
+  </span>
+</div>
+
+Spiegazione
+Errore required: Viene mostrato se il campo è obbligatorio e non è stato compilato.
+Errori minlength e maxlength: Mostrano un errore se la lunghezza del campo non è corretta.
+Errore pattern: Viene mostrato solo se non ci sono errori di required, minlength, o maxlength, e solo se c'è un errore di pattern.
+Questo metodo riduce il numero di condizioni e rende il codice più leggibile. Utilizzando *ngIf con condizioni combinate, il template gestisce in modo più chiaro la priorità degli errori e mostra solo il messaggio rilevante.
+
+
+Alternativa con Funzione <----!!!!!
+
+Se preferisci un approccio ancora più compatto e manutenibile, puoi creare una funzione nel tuo componente per determinare quale messaggio di errore mostrare. In questo modo, il template diventa più pulito:
+
+TS
+getErrorMessage(controlName: string): string | null {
+  const control = this.getCampoIndirizzo(controlName);
+  
+  if (control.touched && control.invalid) {
+    if (control.errors?.['required']) {
+      return 'Il campo è obbligatorio';
+    }
+    if (control.errors?.['minlength'] || control.errors?.['maxlength']) {
+      return 'Il campo deve contenere 5 caratteri';
+    }
+    if (control.errors?.['pattern']) {
+      return 'Il campo contiene caratteri non validi';
+    }
+  }
+  return null;
+}
+
+HTML
+
+<div *ngIf="getCampoIndirizzo('cap').touched && getCampoIndirizzo('cap').invalid" class="text-danger">
+  <span>{{ getErrorMessage('cap') }}</span>
+</div>
+
+
+Spiegazione
+Funzione getErrorMessage: Determina quale messaggio di errore mostrare basato sullo stato e sugli errori del FormControl.
+Template: Usa la funzione per ottenere e mostrare il messaggio di errore appropriato.
+Questo approccio centralizza la logica di gestione degli errori e mantiene il template più pulito e leggibile.
+
+
+GETTER E FUNZIONE
+
+La differenza tra una funzione e un getter riguarda principalmente la sintassi, l'intento e l'uso.
+
+Sintassi e Accesso: Un getter viene chiamato automaticamente come se fosse una proprietà, mentre una funzione richiede una chiamata esplicita con parentesi. Questo rende il getter simile a una proprietà ordinaria, mentre una funzione è chiaramente un'operazione.
+
+Chiarezza di Intento: I getter sono ideali quando vuoi che l'accesso a un valore sembri naturale, mascherando la complessità sottostante. Le funzioni, invece, sono più esplicite, suggerendo immediatamente che un'operazione è in corso.
+
+Performance: Entrambi vengono eseguiti ogni volta che vengono chiamati, ma con i getter c'è il rischio di nascondere operazioni costose dietro un'interfaccia semplice, mentre le funzioni rendono chiaro che si sta eseguendo del codice.
+
+Uso Pratico: I getter sono adatti quando vuoi accedere a un valore calcolato come se fosse una semplice proprietà, mentre le funzioni sono migliori per operazioni chiaramente identificabili come calcoli o azioni che potrebbero avere un costo computazionale significativo.
+
+In sintesi, i getter offrono un modo più trasparente di accedere ai valori, mentre le funzioni offrono un controllo e una chiarezza maggiori quando si eseguono operazioni.
+
+
+INPUT ALL'INTERNO DELLA LABEL
+
+Mettere l'elemento <input> all'interno di un elemento <label> è una pratica comune per migliorare l'accessibilità e l'usabilità dei form. Quando l'input è all'interno della label, l'intera area della label diventa cliccabile, facilitando l'interazione per l'utente, soprattutto su dispositivi mobili. Questo approccio garantisce anche una relazione chiara e implicita tra il testo della label e l'input, rendendo il codice più semplice e riducendo il rischio di errori di associazione. Inoltre, questo metodo supporta meglio gli screen reader e altri dispositivi di assistenza, migliorando l'accessibilità per utenti con disabilità. In sintesi, include l'input dentro la label ottimizza l'esperienza utente e la compatibilità con diverse tecnologie assistive.
+
+
+CLEARVALIDATORS E REMOVEVALIDATORS
+
+
+clearValidators
+Il metodo clearValidators è utilizzato per rimuovere tutti i validatori associati a un controllo. Quando applicato, questo metodo elimina ogni regola di validazione dal controllo, rendendolo privo di validatori.
+
+Funzione: Rimuove tutti i validatori da un controllo.
+Effetto: Il controllo non ha più regole di validazione associate.
+Uso Tipico: Utile quando è necessario azzerare completamente le regole di validazione prima di impostarne di nuove.
+removeValidators
+Il concetto di removeValidators non esiste come metodo diretto in Angular, ma è possibile rimuovere specifici validatori tramite una gestione manuale.
+
+Funzione: Si riferisce alla rimozione di alcuni validatori specifici da un controllo, mantenendo eventualmente altri validatori.
+Effetto: Richiede di filtrare i validatori esistenti e applicare quelli rimanenti.
+Uso Tipico: Necessario quando si desidera modificare la lista dei validatori, rimuovendo quelli non più desiderati ma mantenendo altri validatori.
+Riassunto delle Differenze
+Ambito:
+
+clearValidators: Rimuove tutti i validatori applicati al controllo.
+removeValidators: Implica la rimozione selettiva di validatori specifici, ma deve essere gestito manualmente.
+Impatto:
+
+clearValidators: Risultato in assenza totale di validatori sul controllo.
+removeValidators: Permette di mantenere alcuni validatori mentre si rimuovono quelli selezionati.
+Contesto di Utilizzo:
+
+clearValidators: Quando è necessario azzerare completamente le regole di validazione.
+removeValidators: Quando si deve aggiornare la lista dei validatori esistenti, rimuovendo solo alcuni.
+In sintesi, clearValidators è usato per rimuovere completamente tutte le regole di validazione, mentre removeValidators è un concetto che richiede una gestione manuale per rimuovere selettivamente i validatori desiderati.
+
+REGEX PER CARTA DI CREDITO
+
+Per formulare una regex che convalidi un numero di carta di credito, è importante considerare le seguenti caratteristiche generali:
+
+1. Lunghezza del numero
+I numeri di carta di credito sono generalmente composti da 13 a 19 cifre.
+La maggior parte delle carte (ad esempio, Visa, Mastercard) ha 16 cifre, ma carte come l'American Express hanno 15 cifre, e alcune carte possono avere 13 o 19 cifre.
+
+2. Formattazione del numero
+Il numero può essere scritto come una singola stringa di cifre o separato in gruppi di 4 cifre con spazi o trattini (-).
+Esempi:
+Senza separatori: 4111111111111111
+Con spazi: 4111 1111 1111 1111
+Con trattini: 4111-1111-1111-1111
+
+3. Prefix specifici
+I numeri di carta di credito iniziano con prefissi specifici che identificano il tipo di carta:
+Visa: Inizia con 4.
+Mastercard: Inizia con numeri da 51 a 55 oppure da 2221 a 2720.
+American Express: Inizia con 34 o 37.
+Discover: Inizia con 6011, 622126-622925, 644-649, o 65.
+Diners Club: Inizia con 300-305, 36, 38, o 39.
+JCB: Inizia con 3528-3589.
+
+4. Algoritmo di Luhn
+Il numero di carta di credito deve soddisfare l'algoritmo di Luhn, un algoritmo di checksum che permette di validare l'integrità del numero.
+
+5. Integrazione con lo specifico regex
+Deve permettere spazi o trattini opzionali tra i gruppi di cifre.
+La regex deve essere abbastanza flessibile per convalidare il formato generale ma rigorosa abbastanza da non accettare formati errati.
+
+^(\d{4}[-\s]?){3}\d{4}|\d{15,19}$ // esempio --> usata nel codice
+
+
+Spiegazione:
+
+(\d{4}[-\s]?){3}\d{4}:
+
+Valida numeri di carta di credito separati in gruppi di 4 cifre con spazi o trattini opzionali.
+(\\d{4}[-\\s]?){3} valida i primi tre gruppi di 4 cifre.
+\\d{4} valida il quarto gruppo di 4 cifre.
+
+|\d{15,19}:
+
+Questo segmento accetta un numero intero di 15 a 19 cifre (senza spazi o separatori).
+
+Considerazioni aggiuntive:
+Validità dei prefissi: Per specificare la carta di credito, è possibile arricchire la regex includendo i prefissi per Visa, Mastercard, ecc.
+Supporto per l'algoritmo di Luhn: Sebbene la regex possa convalidare la lunghezza e il formato, la verifica della validità del numero dovrebbe includere un controllo aggiuntivo per l'algoritmo di Luhn, che non è direttamente realizzabile tramite regex.
+Con questi elementi in mente, è possibile creare una regex che convalidi correttamente la maggior parte dei numeri di carta di credito.
+
+SPEGAZIONI REGEX DA SISTEMARE
+
+NOME 
+
+//regex che valida 1 o + nomi di lingue di derivazione latina, compresi quelli con lettere accentate e lettere puntate (non è stato inserito il minimo di caratteri perchè c'è nel validator precedente ---> giusto? ok? -- vale anche per regex successive)+ vedi Appunti per validator.pattern
+
+COGNOME
+
+//regex che accetta 1 o + cognomi di lingue di derivazione latina (no lettere puntate)
+
+CIVICO 
+
+//accetta tutti i tipi di numeri civici italiani 
+//SIGNIFICATO:
+//-- ^\d{1,4}: Inizia con un numero di 1 a 4 cifre.
+//-- ([a-zA-Z]?): Segue un'opzionale lettera, che può essere maiuscola o minuscola.
+//-- ((\/|\-)\d{1,4}[a-zA-Z]?)?: Gestisce un numero civico barrato o con trattino (es. 15/1, 15-17, 15/A), con un numero opzionale di 1 a 4 cifre e una lettera opzionale.
+//-- $: Indica la fine della stringa.
+//+ vedi appunti
+
+CITTA' 
+
+//Spiegazione:
+// ^ e $ assicurano che l'intera stringa venga confrontata.
+// [A-Za-zÀ-ÖØ-öø-ÿ' -]: Include:
+// A-Za-z: Tutte le lettere dell'alfabeto inglese, maiuscole e minuscole.
+// À-ÖØ-öø-ÿ: Lettere accentate e speciali usate in italiano e altre lingue europee.
+// ': Apostrofo, usato in nomi come O'Connor.
+// : Spazio, per nomi composti come San Giovanni.
+// -: Trattino, per nomi come San-Marino.
+// {2,}: Indica che la stringa deve avere almeno 2 caratteri validi.
+
+TELEFONO
+
+//Questa regex è utile per la validazione dei numeri di telefono italiani nel formato comune
+    // Spiegazione:
+    //-- ^: Inizio della stringa.
+    //-- (\+39\s?)?: Opzionale prefisso internazionale italiano:
+    //-- \+39: Il prefisso internazionale italiano.
+    //-- \s?: Uno spazio opzionale.
+    //-- ((0\d{1,4}\s?\d{6,8})|(\d{10,12})): Numeri di telefono locali o cellulari:
+    //-- 0\d{1,4}\s?\d{6,8}: Numero con prefisso locale:
+    //-- 0: Inizia con uno zero per i prefissi locali.
+    //-- \d{1,4}: Prefisso locale, da 1 a 4 cifre.
+    //-- \s?: Spazio opzionale.
+    //-- \d{6,8}: Numero principale, da 6 a 8 cifre.
+    //-- (\d{10,12}): Numeri di telefono senza prefisso locale, da 10 a 12 cifre.
+    //-- $: Fine della stringa.
+
+SCADENZA CARTA DI CREDITO
+
+//Spiegazione:
+    // ^: Inizio della stringa.
+    // (0[1-9]|1[0-2]): Verifica il mese. Questa parte permette:
+    // 0[1-9]: Mesi compresi tra 01 e 09.
+    // 1[0-2]: Mesi compresi tra 10 e 12.
+    // \/: Carattere di separazione / tra il mese e l'anno.
+    // \d{2}: Verifica che l'anno sia rappresentato da due cifre (ad esempio, 23 per il 2023).
+    // $: Fine della stringa.

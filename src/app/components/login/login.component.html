@@ -1,0 +1,44 @@
+<app-header></app-header>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 border p-5">
+      <h1 class="text-center">Entra nella tua area riservata!</h1>
+    
+      <hr>
+
+      <form class="my-5" [formGroup]="loginForm" (ngSubmit)="login()">
+        <h1 class="h3 mb-3 fw-normal">Accedi</h1>
+        <div class="form-floating mb-3">
+          <input formControlName="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <label for="floatingInput">Email</label>
+          <div *ngIf="loginForm.get('email')!.touched && loginForm.get('email')!.invalid" [ngClass]="'text-danger'">
+            <span *ngIf="loginForm.get('email')!.errors?.['required']">Il campo è obbligatorio</span>
+            <span *ngIf="loginForm.get('email')!.errors?.['email']">L'email non è valida</span>
+        </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input formControlName="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+            <div *ngIf="loginForm.get('password')!.touched && loginForm.get('password')!.invalid" [ngClass]="'text-danger'">
+              <span *ngIf="loginForm.get('password')!.errors?.['required']">Il campo è obbligatorio</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="text-danger mb-3">
+          {{ errorMessage }}
+        </div>
+
+        <button [disabled]="loginForm.invalid" class="btn btn-secondary w-100 py-2" type="submit">Accedi</button>
+        <p class="mt-5 mb-3 text-body-secondary">&copy; 2024</p>
+
+      </form>
+
+      <p class="my-3">
+        <a routerLink="/register">Non hai un account? Registrati</a>
+      </p>
+      
+    </div>
+  </div>
+</div>

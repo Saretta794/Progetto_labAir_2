@@ -1,0 +1,88 @@
+<app-header></app-header>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-4 order-last ps-5">
+            <h1 class="my-5">Riepilogo</h1>
+            <div class="elementsSpace">
+                <p>Hai un codice promozionale?</p><i class="bi bi-chevron-down"></i>
+            </div>
+            <div class="elementsSpace">
+                <p>Subtotale: </p><span>{{cs.subtotal| currency:"EUR"}}</span>
+            </div>
+            <div class="elementsSpace">
+                <p>Costi di spedizione: </p><span>{{cs.shippingCost | currency:"EUR"}}</span>
+            </div>
+            <div class="elementsSpace border-top border-bottom border-secondary-subtle pt-3">
+                <p>Totale: </p><span>{{cs.total | currency:"EUR"}}</span>
+            </div>
+            <button type="button" class="btn btn-dark mt-5 w-100" [disabled]="!cartProducts.length || errorMessage" routerLink="/form-checkout">Vai al pagamento</button>
+        </div>
+
+        <div class="col-md-8" >
+
+            <h1 class="my-5">Carrello</h1>
+
+            <div *ngIf="errorMessage" class="m-3 p-3 customBorder">
+
+                <p>{{errorMessage}}</p>
+
+            </div>
+
+            <ng-container *ngIf="!cartProducts.length && !errorMessage">Il carrello è vuoto!</ng-container>
+
+            <ng-container *ngFor="let cp of cartProducts">
+
+                <div class="row">
+
+                    <div class="col-4">
+
+                        <img [src]="cp.immagine" class="img-fluid mb-3" alt="immagine prodotto">
+
+                    </div>
+
+                    <div class="col-8">
+
+                        <div class="d-md-flex justify-content-between flex-row-reverse">
+
+                            <h2 class="fs-5">{{cp.prezzo_totale | currency:"EUR"}}</h2>
+                            <h2 class="fs-5">{{cp.nome}}</h2>
+                            
+                        </div>
+
+                            <h3 class="fs-6 text-secondary">{{cp.categoria}}</h3>
+                            <h3 class="fs-6 text-secondary">{{cp.colore}}</h3>
+                            <h3 class="fs-6 text-secondary">Taglia/misura: {{cp.taglia}}</h3>
+                            <label class="fs-6 text-secondary fw-bold me-3" for="qntSelect">Quantità:</label>
+                            <select 
+                                name="quantità" id="qntSelect" 
+                                [(ngModel)]="cp.num_pezzi"  
+                                (change)="updateQuantity(cp)" >
+                                <option *ngFor="let i of [1, 2, 3, 4, 5]" [value]="i">{{i}}</option>
+                              </select>
+
+                            <div class="d-flex mt-3 fs-4">
+                                <i class="bi-trash me-2" (click)="deleteProduct(cp.id!)"></i>
+                                <i class="bi-suit-heart"></i>
+                            </div>
+
+
+                            
+
+                        </div>
+
+                        <div class="col-4">
+                            <p class="">Ritiro gratuito</p>
+                            <p>Trova un negozio</p>
+                        </div>
+                    
+                </div> 
+            </ng-container>
+        </div>
+        
+       
+    </div>
+</div>
+

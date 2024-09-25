@@ -1,0 +1,5 @@
+
+  .fixed-size { /*CLASSE PER RENDERE LE IMMAGINI TUTTE DELLA STESSA DIMENSIONE*/
+    height: 500px; /* Imposta un'altezza fissa */
+    object-fit: cover; /* Copre l'intero spazio disponibile mantenendo le proporzioni */
+  }

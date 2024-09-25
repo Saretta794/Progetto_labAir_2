@@ -1,0 +1,81 @@
+<app-header></app-header>
+<div class="position-relative banner-container ">
+    
+    <img src="/assets/images/banner/hero-banner.jpg" class="position-absolute banner-image" title="banner uomini che corrono" alt="banner uomini che corrono">
+
+    <div class="position-absolute bottom-0 start-0 p-5 text-white">
+        <h1>REGALA IL MEGLIO</h1>
+        <p>Ispirazione e movimento: il regalo perfetto</p>
+        <button class="me-2"><a routerLink="/products-list">Acquista</a></button>
+        <button>Bambini</button>
+    </div>
+
+    
+</div>
+
+<!--TREND-->
+
+<div>
+    
+    <h2 class="my-4">Trend della settimana</h2>
+
+    <div class="image-wrapper">
+        <div class="image-container" #imageContainer >
+            <div class="image-item" *ngFor="let p of trendProdotti" >
+                <img [src]="p.immagine" alt="immagine scarpa trend">
+                <div class="mt-3">
+                    <h3 class="fs-5"><a [routerLink]="['/product', p.id]">{{p.nome}}</a></h3>
+                    <h4 class="fs-6 mb-3 fw-light">{{p.categoria}}</h4>
+                    <h3 class="fs-5">{{p.prezzo}}</h3>
+                    
+
+                </div>
+                
+            </div>
+            
+        </div>
+    </div> 
+    
+</div>
+
+<!--CATEGORIE-->
+
+
+<div>
+    
+    <h2 class="my-4">Acquista per categoria di sport</h2>
+
+    <div class="image-wrapper">
+        <div class="image-container" #imageContainer >
+            <div class="image-item" *ngFor="let i of categoryImg" >
+                <img [src]="i.src" [alt]="i.alt">
+                <button class="text-overlay">{{i.title}}</button>
+            </div>
+            
+        </div>
+    </div> 
+    
+</div>
+
+<!--MEMBERSHIP-->
+
+<div>
+    
+    <h2 class="my-4">Membership LabAir</h2>
+
+    <div class="image-wrapper">
+        <div class="image-container" #imageContainer >
+            <div class="image-item" *ngFor="let i of membershipImg" >
+                <img [src]="i.src" [alt]="i.alt">
+                <div class="text-overlay text-white fw-bold">
+                    <p>{{i.title2}}</p>
+                    <h3 class="mb-5">{{i.title3}}</h3>
+                    <button >{{i.title}}</button>
+                </div>
+            </div>
+            
+        </div>
+    </div> 
+    
+</div>
+

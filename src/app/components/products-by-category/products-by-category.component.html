@@ -1,0 +1,23 @@
+<app-header></app-header>
+
+<div *ngIf="errorMessage" class="m-3 p-3 customBorder">
+
+    <p>{{errorMessage}}</p>
+
+</div>
+
+
+<h1 class="mt-5">{{category}}</h1>
+
+<p class="mb-3">Scopri tutti i modelli della categoria {{category}}!</p>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <app-product-preview
+
+    *ngFor="let p of products"
+    [product]="p">
+
+    </app-product-preview>
+
+</div>

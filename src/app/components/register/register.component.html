@@ -1,0 +1,51 @@
+<app-header></app-header>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6 border p-5">
+        <h1 class="text-center">Crea un account</h1>
+        <hr>
+        <form class="my-5" [formGroup]="registerFrm" (ngSubmit)="register()">
+           
+            <div class="form-floating mb-3">
+              <input formControlName="nome" type="text" class="form-control" id="nome">
+              <label for="nome">Nome</label>
+              <div *ngIf="registerFrm.get('nome')!.touched && registerFrm.get('nome')!.invalid" [ngClass]="'text-danger'">
+                <span *ngIf="registerFrm.get('nome')!.errors?.['required']">Il campo è obbligatorio</span>
+                <span *ngIf="registerFrm.get('nome')!.errors?.['minlength']">Inserisci almeno {{registerFrm.get('nome')!.errors?.['minlength'].requiredLength}} caratteri</span>
+                <span *ngIf="!registerFrm.get('nome')!.errors?.['minlength'] && registerFrm.get('nome')!.errors?.['pattern']">Il campo contiene caratteri non validi</span>
+              </div> 
+            </div>
+
+            <div class="form-floating mb-3">
+                <input formControlName="cognome" type="text" class="form-control" id="cognome">
+                <label for="cognome">Cognome</label>
+                <div *ngIf="registerFrm.get('cognome')!.touched && registerFrm.get('cognome')!.invalid" [ngClass]="'text-danger'">
+                  <span *ngIf="registerFrm.get('cognome')!.errors?.['required']">Il campo è obbligatorio</span>
+                  <span *ngIf="registerFrm.get('cognome')!.errors?.['minlength']">Inserisci almeno {{registerFrm.get('cognome')!.errors?.['minlength'].requiredLength}} caratteri</span>
+                  <span *ngIf="!registerFrm.get('cognome')!.errors?.['minlength'] && registerFrm.get('cognome')!.errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                </div> 
+              </div>
+
+            <div class="form-floating mb-3">
+              <input formControlName="email" type="email" class="form-control" id="email">
+              <label for="email">Email</label>
+              <div *ngIf="registerFrm.get('email')!.touched && registerFrm.get('email')!.invalid" [ngClass]="'text-danger'">
+                <span *ngIf="registerFrm.get('email')!.errors?.['required']">Il campo è obbligatorio</span>
+                <span *ngIf="registerFrm.get('email')!.errors?.['email']">L'email non è valida</span>
+            </div>
+            </div>
+            <div class="form-floating mb-3">
+              <input formControlName="password" type="password" class="form-control" id="password">
+              <label for="password">Password</label>
+              <div *ngIf="registerFrm.get('password')!.touched && registerFrm.get('password')!.invalid" [ngClass]="'text-danger'">
+                <span *ngIf="registerFrm.get('password')!.errors?.['required']">Il campo è obbligatorio</span>
+              </div>
+            </div>
+            
+            <button class="btn btn-secondary w-100 my-4" type="submit">Accedi</button>
+            <p class="mt-5 mb-3 text-body-secondary">&copy; 2024</p>
+          </form>
+      </div>
+    </div>
+</div>

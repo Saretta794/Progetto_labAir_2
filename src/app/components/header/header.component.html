@@ -1,0 +1,108 @@
+
+  <div class="container-fluid bg-secondary-subtle py-1 heigth-50" id="top-menu">
+    
+      <ul class="nav justify-content-end">
+          <li class="nav-item" *ngFor="let element of topMenuElements">
+              <a class="nav-link text-dark" [routerLink]="element.path">{{ element.title }}</a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a class="nav-link text-dark" [routerLink]="['/personal-dashboard', loggedUserID]"><i class="bi bi-person"></i></a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLoggedIn">
+              <a class="nav-link text-dark" (click)="logout()"><i class="bi bi-box-arrow-right"></i></a>
+          </li>
+       
+      </ul>
+
+  </div>
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container-fluid ">
+
+      <a class="navbar-brand" href="#">
+        <img src="/assets/images/loghi/logo-labair.png" width="100">
+      </a>
+
+      <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+
+      <div [ngbCollapse]="isMenuCollapsed"  class="collapse navbar-collapse" id="navbarToggler"> 
+       
+        <ul class="navbar-nav mb-2 mb-lg-0 w-100">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/new-arrivals">Nuovi Arrivi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/best-seller">Best Seller</a>
+          </li>
+
+          <li ngbDropdown class="d-inline-block"><!--implementazione per angular di bootstrap-->
+            <a ngbDropdownToggle class="nav-link dropdown-toggle">
+             Scopri lo sport
+            </a>
+            <ul ngbDropdownMenu class="dropdown-menu">
+              <li *ngFor="let c of categories">
+                <a class="dropdown-item" [routerLink]="['/category', c]" >{{c}}</a>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/products">Acquista</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav d-lg-none">
+          <hr>
+          <li class="nav-item" *ngFor="let element of topMenuElements">
+            <a class="nav-link text-dark" [routerLink]="element.path">{{ element.title }}</a>
+        </li>
+
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a class="nav-link text-dark" [routerLink]="['/personal-dashboard', loggedUserID]"><i class="bi bi-person"></i></a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLoggedIn">
+            <a class="nav-link text-dark" (click)="logout()"><i class="bi bi-box-arrow-right"></i></a>
+          </li>
+          <hr>
+        </ul>
+
+          <div class="input-group my-2 d-flex width">
+            <input 
+            type="text" 
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            >
+            <button 
+            type="button" 
+            class="input-group-text"
+            (click)="onSearchChange()">Cerca</button>
+            <i class="bi bi-suit-heart mx-3 fs-4"></i>
+            <i class="bi bi-cart fs-4" routerLink="/cart"></i>
+          </div>
+         
+       
+      </div>
+    </div>
+  </nav>
+
+  <ngb-carousel [showNavigationIndicators]="false" [interval]="5000" class="bg-secondary-subtle heigth-50">
+    <ng-template ngbSlide *ngFor="let slide of slides"> 
+        <div class="py-1">
+          <a [routerLink]="slide.path">
+            <p class="text-center">{{slide.title}}</p>
+          </a>
+        </div>
+    </ng-template>
+    
+  </ngb-carousel>
+
+  
+  
+  

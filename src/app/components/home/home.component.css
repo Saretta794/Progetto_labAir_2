@@ -1,0 +1,100 @@
+/* styles.css */
+.banner-container {
+    width: 100%;
+    height: 700px; /* Altezza fissa del banner */
+    overflow: hidden;
+   
+  }
+  
+  .banner-image {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover; /* Assicura che l'immagine copra il contenitore mantenendo le proporzioni */
+  }
+
+  /* Spiegazione
+HTML:
+
+app-header rimane invariato.
+Il contenitore del banner (banner-container) utilizza la classe position-relative di Bootstrap per rendere il contenuto posizionabile.
+L'immagine del banner ha una classe banner-image per gli stili CSS specifici e img-fluid di Bootstrap per renderla responsiva.
+Il testo del banner è posizionato assolutamente in basso a sinistra e utilizza classi di Bootstrap per la formattazione dei pulsanti.
+CSS:
+
+banner-container: Questo div ha una larghezza del 100% e un'altezza fissa (in questo caso, 400px). Utilizza overflow: hidden per nascondere le parti dell'immagine che escono dai bordi del contenitore.
+banner-image: L'immagine è posizionata assolutamente al centro del contenitore con top: 50% e left: 50%, e viene traslata con transform: translate(-50%, -50%). Le proprietà min-width: 100% e min-height: 100% assicurano che l'immagine riempia sempre il contenitore, mantenendo le proporzioni e centrando la parte centrale dell'immagine. object-fit: cover assicura che l'immagine riempia il contenitore mantenendo le proporzioni.
+Con queste modifiche, il banner dovrebbe mantenere la sua altezza fissa e mostrare sempre la parte centrale dell'immagine, mentre i lati vengono tagliati quando lo schermo viene ridotto. Verifica di avere importato correttamente Bootstrap e che i percorsi dei file CSS siano corretti.
+   */
+
+   
+.image-wrapper {
+
+    width: auto;
+    overflow: auto;
+    scrollbar-width: thin;
+  } 
+
+
+  .image-container {
+    display: flex;
+    width: 100%;
+    gap:20px;
+    margin-bottom: 20px;
+  
+  }
+
+  .image-item{
+    min-width: 100%;
+    position: relative;
+  }
+
+  .text-overlay{
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 20px;
+  }
+  
+  .image-item img {
+
+    object-fit: cover;
+    width: 100%;
+
+  }
+
+  .scroll-buttons {
+    display: flex;
+    justify-content: space-between; /* Posiziona i bottoni a entrambi i lati */
+    margin-top: 10px; /* Aggiunge spazio sopra i bottoni */
+  }
+  
+  
+  /*TABLET (e desktop)*/
+  @media screen and (min-width:481px) {
+    
+  .image-container {
+  
+    width: calc(100%/2);
+  
+  }
+  }
+  
+  /*DESKTOP*/
+  @media screen and (min-width:769px) {
+  
+  .image-container {
+   
+    width: calc(100%/3);
+  
+  }
+  
+  }
+  
+  
+  
+  
+  

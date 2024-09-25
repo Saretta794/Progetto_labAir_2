@@ -1,0 +1,342 @@
+
+<div class="container mt-5">
+
+    <h1 class="text-center fw-bold">Pagamento</h1>
+
+    <div class="row">
+
+        <div class="col-md-4 order-last ps-5">
+
+            <div class="d-flex justify-content-between align-items-baseline ">
+                <h3 class="mb-5">Nel carrello</h3>
+
+                <h5><a routerLink="/cart">Modifica</a></h5>
+            </div>
+
+            <div class="elementsSpace">
+                <p>Subtotale: </p><span>{{subtotal | currency:"EUR"}}</span>
+            </div>
+            <div class="elementsSpace">
+                <p>Costi di spedizione: </p><span>{{shippingCost| currency:"EUR"}}</span>
+            </div>
+            <div class="elementsSpace border-top border-bottom border-secondary-subtle pt-3">
+                <p>Totale: </p><span>{{total| currency:"EUR"}}</span>
+            </div>
+        
+        </div>
+
+        <div class="col-md-8">
+
+            <h1 class="mb-5">Dati consegna</h1>
+
+            <form [formGroup]="pagamento" (ngSubmit)="inviaDatiSpedPag()">
+
+                <ng-container formGroupName="datiSpedizione" *ngIf="isShippingSectionOpen">
+
+                    <div class="row">
+                        <div class="my-3 col-md-6">
+
+                            <label for="name" class="form-label">Nome</label>
+                            <input 
+                            type="text" 
+                            id="name"
+                            class="form-control"
+                            formControlName="nome"
+                            [ngClass]="{'is-invalid': getCampoDatiSped('nome').touched && getCampoDatiSped('nome').invalid}">
+                            
+                            <!-- <span>{{getCampoDatiSped('nome').errors | json}}</span> --> 
+
+                        <div *ngIf="getCampoDatiSped('nome').touched && getCampoDatiSped('nome').invalid" [ngClass]="'text-danger'">
+                            <span *ngIf="getCampoDatiSped('nome').errors?.['required']">Il campo è obbligatorio</span>
+                            <span *ngIf="getCampoDatiSped('nome').errors?.['minlength']">Inserisci almeno {{getCampoDatiSped('nome').errors?.['minlength'].requiredLength}} caratteri</span>
+                            <span *ngIf="!getCampoDatiSped('nome').errors?.['minlength'] && getCampoDatiSped('nome').errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                        </div>
+                        </div>
+
+                        
+
+                        <div class="my-3 col-md-6">
+
+                            <label for="last_name" class="form-label">Cognome</label>
+                            <input 
+                            type="text" 
+                            id="last_name"
+                            class="form-control"
+                            formControlName="cognome"
+                            [ngClass]="{'is-invalid': getCampoDatiSped('cognome').touched && getCampoDatiSped('cognome').invalid}"
+                            >
+
+                            <div *ngIf="getCampoDatiSped('cognome').touched && getCampoDatiSped('cognome').invalid" [ngClass]="'text-danger'">
+                                <span *ngIf="getCampoDatiSped('cognome').errors?.['required']">Il campo è obbligatorio</span>
+                                <span *ngIf="getCampoDatiSped('cognome').errors?.['minlength']">Inserisci almeno {{getCampoDatiSped('cognome').errors?.['minlength'].requiredLength}} caratteri</span>
+                                <span *ngIf="!getCampoDatiSped('cognome').errors?.['minlength'] && getCampoDatiSped('cognome').errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                            </div> 
+                        </div>
+                    </div>
+
+                    <ng-container formGroupName="indirizzoCompleto">
+
+                        <div class="row">
+                            <div class="my-3 col-md-10">
+
+                                
+                                <label for="address" class="form-label">Indirizzo</label>
+                                <input 
+                                type="text" 
+                                id="address"
+                                class="form-control"
+                                formControlName="indirizzo"
+                                [ngClass]="{'is-invalid': getCampoIndirizzo('indirizzo').touched && getCampoIndirizzo('indirizzo').invalid}"
+                                >
+
+                                <div *ngIf="getCampoIndirizzo('indirizzo').touched && getCampoIndirizzo('indirizzo').invalid" [ngClass]="'text-danger'">
+                                    <span *ngIf="getCampoIndirizzo('indirizzo').errors?.['required']">Il campo è obbligatorio</span>
+                                    <span *ngIf="getCampoIndirizzo('indirizzo').errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                                </div> 
+
+                            </div>
+
+                            
+                            <div class="my-3 col-md-2">
+
+                                <label for="street_number" class="form-label">Civico</label>
+                                <input 
+                                type="text" 
+                                id="street_number"
+                                class="form-control"
+                                formControlName="civico"
+                                [ngClass]="{'is-invalid': getCampoIndirizzo('civico').touched && getCampoIndirizzo('civico').invalid}"
+                                >
+
+                                <div *ngIf="getCampoIndirizzo('civico').touched && getCampoIndirizzo('civico').invalid" [ngClass]="'text-danger'">
+                                    <span *ngIf="getCampoIndirizzo('civico').errors?.['required']">Il campo è obbligatorio</span>
+                                    <span *ngIf="getCampoIndirizzo('civico').errors?.['pattern']">Il campo contiene un formato non valido</span>
+                                </div> 
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="my-3 col-md-4">
+
+                                
+                                <label for="CAP" class="form-label">CAP</label>
+                                <input 
+                                type="text" 
+                                id="CAP"
+                                class="form-control"
+                                formControlName="cap"
+                                [ngClass]="{'is-invalid': getCampoIndirizzo('cap').touched && getCampoIndirizzo('cap').invalid}"
+                                >
+
+                                <div *ngIf="getCampoIndirizzo('cap').touched && getCampoIndirizzo('cap').invalid" [ngClass]="'text-danger'">
+                                    <span *ngIf="getCampoIndirizzo('cap').errors?.['required']">Il campo è obbligatorio</span>
+                                    <span *ngIf="getCampoIndirizzo('cap').errors?.['minlength'] || getCampoIndirizzo('cap').errors?.['maxlength']">Il campo deve contenere 5 caratteri</span>
+                                    <span *ngIf="!getCampoIndirizzo('cap').errors?.['required'] && !getCampoIndirizzo('cap').errors?.['maxlength'] && getCampoIndirizzo('cap').errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                                </div>
+
+                            </div>
+
+                            <div class="my-3 col-md-4">
+
+                                
+                                <label for="city" class="form-label">Città</label>
+                                <input 
+                                type="text" 
+                                id="city"
+                                class="form-control"
+                                formControlName="città"
+                                [ngClass]="{'is-invalid': getCampoIndirizzo('città').touched && getCampoIndirizzo('città').invalid}"
+                                >
+
+                                <div *ngIf="getCampoIndirizzo('città').touched && getCampoIndirizzo('città').invalid" [ngClass]="'text-danger'">
+                                    <span *ngIf="getCampoIndirizzo('città').errors?.['required']">Il campo è obbligatorio</span>
+                                    <span *ngIf="getCampoIndirizzo('città').errors?.['pattern']">Il campo contiene caratteri non validi</span>
+                                </div>
+
+                            </div>
+
+                            <div class="my-3 col-md-4">
+                                <label for="stato" class="form-label">Stato</label>
+                                <input 
+                                    type="text" 
+                                    id="stato"
+                                    class="form-control"
+                                    formControlName="stato"
+                                    readonly>
+                            </div>
+                            
+
+                    </div>
+
+                    </ng-container>
+
+                    <div class="row">   
+                        <div class="my-3 col-md-6">
+
+                                
+                            <label for="email" class="form-label">Email</label>
+                            <input 
+                            type="text" 
+                            id="email"
+                            class="form-control"
+                            formControlName="email"
+                            [ngClass]="{'is-invalid': getCampoDatiSped('email').touched && getCampoDatiSped('email').invalid}"
+                            >
+
+                            <div *ngIf="getCampoDatiSped('email').touched && getCampoDatiSped('email').invalid" [ngClass]="'text-danger'">
+                                <span *ngIf="getCampoDatiSped('email').errors?.['required']">Il campo è obbligatorio</span>
+                                <span *ngIf="getCampoDatiSped('email').errors?.['email']">L'email non è valida</span>
+                            </div>
+                        </div>
+
+                        
+                        <div class="my-3 col-md-6">
+
+                            
+                            <label for="telephone" class="form-label">Telefono</label>
+                            <input 
+                            type="text" 
+                            id="telephone"
+                            class="form-control"
+                            formControlName="telefono"
+                            [ngClass]="{'is-invalid': getCampoDatiSped('telefono').touched && getCampoDatiSped('telefono').invalid}"
+                            >
+
+                            
+                            <div *ngIf="getCampoDatiSped('telefono').touched && getCampoDatiSped('telefono').invalid" [ngClass]="'text-danger'">
+                                <span *ngIf="getCampoDatiSped('telefono').errors?.['required']">Il campo è obbligatorio</span>
+                                <span *ngIf="getCampoDatiSped('telefono').errors?.['pattern']">Il telefono non è valido</span>
+                            </div>
+                            
+
+                        </div>
+                    </div> 
+
+                </ng-container>
+
+                <div class="d-flex justify-content-end border-bottom pb-3">
+                    <button type="button" class="bnt bnt-outline-secondary p-3"  *ngIf="!salvaEcontinuaDesappear" (click)="salvaContinua()">Salva e continua</button>
+                </div>
+
+                <div class="py-3">
+                    <h1>Pagamento</h1>
+                </div>
+
+                <ng-container formGroupName="datiPagamento" *ngIf="isPaymentSectionOpen">
+                    <div class="my-5">
+
+                        <p>Seleziona un metodo di pagamento:</p>
+
+                        
+                        <div class="mb-2">
+                            <input type="radio" id="card" formControlName="sceltaPagamento" value="carta">
+                            <label class="ms-2" for="card">Carta</label>
+                        </div>
+
+                        <div class="mb-2">
+                            <input type="radio" id="payPal" formControlName="sceltaPagamento" value="payPal">
+                            <label class="ms-2" for="payPal">PayPal</label>
+                        </div>
+
+                        <div class="mb-5">
+                            <input type="radio" id="gPay" formControlName="sceltaPagamento" value="gPay">
+                            <label class="ms-2" for="gPay">GPay</label>
+                        </div>
+
+                        <div *ngIf="sceltaPagamento === 'carta'">
+
+                            <ng-container formGroupName="datiCarta">
+
+                                <div  class="row borderCustom mb-3">
+                                    <div class="col-md-6">
+                                        <label for="cardNum" class="form-label">Numero carta</label>
+                                        <input 
+                                        type="text" 
+                                        id="CardNum"
+                                        class="form-control"
+                                        formControlName="numeroCarta"
+                                        [ngClass]="{'is-invalid': getDatiCarta('numeroCarta').touched && getDatiCarta('numeroCarta').invalid}">
+
+                                        <div *ngIf="getDatiCarta('numeroCarta').touched && getDatiCarta('numeroCarta').invalid" [ngClass]="'text-danger'">
+                                            <span *ngIf="getDatiCarta('numeroCarta').errors?.['required']">Il campo è obbligatorio</span>
+                                            <span *ngIf="getDatiCarta('numeroCarta').errors?.['pattern']">Il numero non è valido</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="cardExpiry" class="form-label">Scadenza</label>
+                                        <input 
+                                        type="text" 
+                                        id="cardExpiry" 
+                                        class="form-control"
+                                        formControlName="scadenza"
+                                        [ngClass]="{'is-invalid': getDatiCarta('scadenza').touched && getDatiCarta('scadenza').invalid}">
+
+                                        <div *ngIf="getDatiCarta('scadenza').touched && getDatiCarta('scadenza').invalid" [ngClass]="'text-danger'">
+                                            <span *ngIf="getDatiCarta('scadenza').errors?.['required']">Il campo è obbligatorio</span>
+                                            <span *ngIf="getDatiCarta('scadenza').errors?.['pattern']">Il numero non è valido</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input 
+                                        type="text" 
+                                        id="cvv" 
+                                        class="form-control"
+                                        formControlName="cvv"
+                                        [ngClass]="{'is-invalid': getDatiCarta('cvv').touched && getDatiCarta('cvv').invalid}">
+
+                                        <div *ngIf="getDatiCarta('cvv').touched && getDatiCarta('cvv').invalid" [ngClass]="'text-danger'">
+                                            <span *ngIf="getDatiCarta('cvv').errors?.['required']">Il campo è obbligatorio</span>
+                                            <span *ngIf="getDatiCarta('cvv').errors?.['pattern']">Il formato non è valido</span>
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button type="submit">Passa alla verifica dell'ordine</button>
+                                </div>
+
+                                </ng-container>
+                            </div>
+
+                    
+
+                        <div *ngIf="sceltaPagamento === 'payPal'">
+
+                            <p>Dopo aver confermato l'ordine sarai reindirizzato sul sito di PayPal</p>
+
+                            <div class="d-flex justify-content-end mb-3">
+                                <button>Passa alla verifica dell'ordine</button>
+                            </div>
+                        
+                        </div>
+
+                        <div *ngIf="sceltaPagamento === 'gPay'">
+
+                            <div class="d-flex justify-content-end mb-3">
+                                <button>Passa alla verifica dell'ordine</button>
+                            </div>
+                        
+                        
+                        </div>
+
+                    </div>
+
+                </ng-container>
+
+            </form>
+
+            <div class="py-3 border-bottom border-top">
+                <h1>Conferma dell'ordine</h1>
+            </div>
+            
+
+        </div>
+    </div>  
+</div>

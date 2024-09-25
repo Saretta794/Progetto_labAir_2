@@ -1,1 +1,57 @@
 /* You can add global styles to this file, and also import other style files */
+*{box-sizing: border-box;}
+
+/*ho importato il font che voglio utilizzare per il mio sito in diversi formati per una maggiore compatibilità*/
+@font-face { 
+  font-family: 'Quicksand';
+  src: url('/assets/font/Quicksand-Regular.woff2'),
+       url('/assets/font/Quicksand-Regular.woff'),
+       url('/assets/font/Quicksand-Regular.ttf.ttf')
+
+}
+
+
+body{
+  
+  font-family: 'Quicksand', sans-serif;
+  
+}
+
+a{color: black;}
+
+
+button {
+    
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 2%;
+    color: #808080;
+    font-weight: bold;
+    
+}
+
+button:hover{border-color: #000000;}
+
+i, a{cursor: pointer;}
+/* 
+img, video{ 
+    max-width: 100%;
+    display: block;
+} */
+
+
+.customBorder{
+
+    border: solid 1px red;
+    border-radius: 30px;
+    text-align: center;
+    padding-top: 5px;
+  }
+  
+
+  /*classe utilizzata in cart e form*/
+
+  .elementsSpace{
+    display: flex;
+    justify-content: space-between;
+  }

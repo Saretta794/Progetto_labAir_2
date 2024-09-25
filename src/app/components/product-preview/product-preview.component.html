@@ -1,0 +1,22 @@
+<div *ngIf="product" class="col h-100">
+
+  <div class="card h-100">
+
+    <img [src]="product.immagine" class="card-img-top fixed-size" alt="immagine scarpa">
+
+    <div class="card-body">
+
+      <p *ngIf="product.best_seller > 3" class="text-danger fw-bold">Best-seller</p>
+      <h5 class="card-title"><a [routerLink]="['/product', product.id]">{{product.nome}}</a></h5>
+      <p class="card-text fw-light">
+      {{product.categoria}} <br>
+      {{product.colori_disponibili.length}} colori disponibili </p>
+      <h5>{{product.prezzo | currency: 'EUR'}}</h5>
+      <!-- <h3>{{product.best_seller}}</h3> -->
+      <!-- <h3>{{product.nuovo_arrivo}}</h3> -->
+
+    </div>
+    
+  </div>
+
+</div>
